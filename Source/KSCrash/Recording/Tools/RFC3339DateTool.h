@@ -1,3 +1,5 @@
+#ifndef HDR_RFC3339DateTool_h
+#define HDR_RFC3339DateTool_h
 //
 // RFC3339DateTool.h
 //
@@ -64,3 +66,5 @@
 + (unsigned long long) UNIXTimestampFromString:(NSString*) string;
 
 @end
+
+#endif

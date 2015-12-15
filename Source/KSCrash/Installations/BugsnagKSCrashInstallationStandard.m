@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashInstallationStandard.m
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2013-03-02.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,39 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKSCrashInstallationStandard.h"
+#import "BugsnagKSCrashInstallation+Private.h"
+#import "ARCSafe_MemMgmt.h"
+#import "BugsnagKSSingleton.h"
+#import "BugsnagKSCrashReportSinkStandard.h"
 
 
-/** Adds dictionary merging capabilities.
- */
-@interface NSDictionary (BugsnagKSMerge)
+@implementation BugsnagKSCrashInstallationStandard
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BugsnagKSCrashInstallationStandard)
+
+@synthesize url = _url;
+
+- (id) init
+{
+    if((self = [super initWithRequiredProperties:[NSArray arrayWithObjects:
+                                                  @"url",
+                                                  nil]]))
+    {
+    }
+    return self;
+}
+
+- (void) dealloc
+{
+    as_release(_url);
+    as_superdealloc();
+}
+
+- (id<BugsnagKSCrashReportFilter>) sink
+{
+    BugsnagKSCrashReportSinkStandard* sink = [BugsnagKSCrashReportSinkStandard sinkWithURL:self.url];
+    return [BugsnagKSCrashReportFilterPipeline filterWithFilters:[sink defaultCrashReportFilterSet], nil];
+}
 
 @end

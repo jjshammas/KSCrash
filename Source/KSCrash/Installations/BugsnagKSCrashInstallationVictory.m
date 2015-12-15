@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.m
+//  BugsnagKSCrashInstallationVictory.m
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Kelp on 2013-03-13.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,44 +25,43 @@
 //
 
 
-#import "NSDictionary+Merge.h"
+#import "BugsnagKSCrashInstallationVictory.h"
+#import "BugsnagKSCrashInstallation+Private.h"
+#import "ARCSafe_MemMgmt.h"
+#import "BugsnagKSSingleton.h"
+#import "BugsnagKSCrashReportSinkVictory.h"
 
 
-#if __has_feature(objc_arc)
-    #define as_autorelease(X)        (X)
-#else
-    #define as_autorelease(X)       [(X) autorelease]
-#endif
+@implementation BugsnagKSCrashInstallationVictory
 
+IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BugsnagKSCrashInstallationVictory)
 
-@implementation NSDictionary (BugsnagKSMerge)
+@synthesize url = _url;
+@synthesize userName = _userName;
+@synthesize userEmail = _userEmail;
 
-- (NSDictionary*) mergedInto:(NSDictionary*) dest
+- (id) init
 {
-    if([dest count] == 0)
+    if((self = [super initWithRequiredProperties:[NSArray arrayWithObjects:
+                                                   @"url",
+                                                   nil]]))
     {
-        return self;
     }
-    if([self count] == 0)
-    {
-        return dest;
-    }
+    return self;
+}
 
-    NSMutableDictionary* dict = as_autorelease([dest mutableCopy]);
-    for(id key in [self allKeys])
-    {
-        id srcEntry = [self objectForKey:key];
-        id dstEntry = [dest objectForKey:key];
-        if([dstEntry isKindOfClass:[NSDictionary class]] &&
-           [srcEntry isKindOfClass:[NSDictionary class]])
-        {
-            srcEntry = [srcEntry mergedInto:dstEntry];
-        }
-        [dict setObject:srcEntry forKey:key];
-    }
-    return dict;
+- (void) dealloc
+{
+    as_release(_url);
+    as_release(_userName);
+    as_release(_userEmail);
+    as_superdealloc();
+}
+
+- (id<BugsnagKSCrashReportFilter>) sink
+{
+    BugsnagKSCrashReportSinkVictory* sink = [BugsnagKSCrashReportSinkVictory sinkWithURL:self.url userName:self.userName userEmail:self.userEmail];
+    return [BugsnagKSCrashReportFilterPipeline filterWithFilters:[sink defaultCrashReportFilterSet], nil];
 }
 
 @end
-
-@interface NSDictionary_Merge_O8FG4A : NSObject @end @implementation NSDictionary_Merge_O8FG4A @end

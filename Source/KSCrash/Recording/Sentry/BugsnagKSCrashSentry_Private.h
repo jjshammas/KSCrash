@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashSentry_Private.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-09-29.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,42 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#ifndef HDR_BugsnagKSCrashSentry_Private_h
+#define HDR_BugsnagKSCrashSentry_Private_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    
+#include "BugsnagKSCrashSentry.h"
 
 
-/** Adds dictionary merging capabilities.
+/** Suspend all non-reserved threads.
+ *
+ * Reserved threads include the current thread and all threads in
+ "reservedThreads" in the context.
  */
-@interface NSDictionary (BugsnagKSMerge)
+void kscrashsentry_suspendThreads(void);
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+/** Resume all non-reserved threads.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * Reserved threads include the current thread and all threads in
+ * "reservedThreads" in the context.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+void kscrashsentry_resumeThreads(void);
 
-@end
+/** Prepare the context for handling a new crash.
+ */
+void kscrashsentry_beginHandlingCrash(BugsnagKSCrash_SentryContext* context);
+
+/** Clear a crash sentry context.
+ */
+void kscrashsentry_clearContext(BugsnagKSCrash_SentryContext* context);
+
+    
+#ifdef __cplusplus
+}
+#endif
+
+#endif // HDR_BugsnagKSCrashSentry_Private_h

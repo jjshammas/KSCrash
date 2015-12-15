@@ -1,7 +1,5 @@
 //
-//  NSDictionary+Merge.h
-//
-//  Created by Karl Stenerud on 2012-10-01.
+//  BugsnagKSCrashType.c
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +23,36 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#include "BugsnagKSCrashType.h"
+
+#include <stdlib.h>
 
 
-/** Adds dictionary merging capabilities.
- */
-@interface NSDictionary (BugsnagKSMerge)
+static const struct
+{
+    const BugsnagKSCrashType type;
+    const char* const name;
+} g_crashTypes[] =
+{
+#define CRASHTYPE(NAME) {NAME, #NAME}
+    CRASHTYPE(BugsnagKSCrashTypeMachException),
+    CRASHTYPE(BugsnagKSCrashTypeSignal),
+    CRASHTYPE(BugsnagKSCrashTypeCPPException),
+    CRASHTYPE(BugsnagKSCrashTypeNSException),
+    CRASHTYPE(BugsnagKSCrashTypeMainThreadDeadlock),
+    CRASHTYPE(BugsnagKSCrashTypeUserReported),
+};
+static const int g_crashTypesCount = sizeof(g_crashTypes) / sizeof(*g_crashTypes);
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
 
-@end
+const char* kscrashtype_name(const BugsnagKSCrashType crashType)
+{
+    for(int i = 0; i < g_crashTypesCount; i++)
+    {
+        if(g_crashTypes[i].type == crashType)
+        {
+            return g_crashTypes[i].name;
+        }
+    }
+    return NULL;
+}

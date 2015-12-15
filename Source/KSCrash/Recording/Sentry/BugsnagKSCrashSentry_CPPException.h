@@ -1,7 +1,5 @@
 //
-//  NSDictionary+Merge.h
-//
-//  Created by Karl Stenerud on 2012-10-01.
+//  BugsnagKSCrashSentry_CPPException.h
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -24,29 +22,31 @@
 // THE SOFTWARE.
 //
 
+#ifndef HDR_BugsnagKSCrashSentry_CPPException_h
+#define HDR_BugsnagKSCrashSentry_CPPException_h
 
-#import <Foundation/Foundation.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "BugsnagKSCrashSentry.h"
 
 
-/** Adds dictionary merging capabilities.
+/** Install the C++ exception handler.
+ *
+ * @param context Contextual information for the crash handler.
+ *
+ * @return true if installation was succesful.
  */
-@interface NSDictionary (BugsnagKSMerge)
+bool kscrashsentry_installCPPExceptionHandler(BugsnagKSCrash_SentryContext* context);
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+/** Uninstall the C++ exception handler.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+void kscrashsentry_uninstallCPPExceptionHandler(void);
 
-@end
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // HDR_BugsnagKSCrashSentry_CPPException_h

@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashReportSinkStandard.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-02-18.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,29 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKSCrashReportFilter.h"
 
 
-/** Adds dictionary merging capabilities.
+/**
+ * Sends crash reports to an HTTP server.
+ *
+ * Input: NSDictionary
+ * Output: Same as input (passthrough)
  */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagKSCrashReportSinkStandard : NSObject <BugsnagKSCrashReportFilter>
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+/** Constructor.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * @param url The URL to connect to.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
++ (BugsnagKSCrashReportSinkStandard*) sinkWithURL:(NSURL*) url;
+
+/** Constructor.
+ *
+ * @param url The URL to connect to.
+ */
+- (id) initWithURL:(NSURL*) url;
+
+- (id <BugsnagKSCrashReportFilter>) defaultCrashReportFilterSet;
 
 @end

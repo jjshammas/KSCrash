@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSArchSpecific.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-02-17.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,36 @@
 //
 
 
-#import <Foundation/Foundation.h>
-
-
-/** Adds dictionary merging capabilities.
+/* Architecture-dependent defines.
  */
-@interface NSDictionary (BugsnagKSMerge)
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
 
-@end
+#ifndef HDR_BugsnagKSArchSpecific_h
+#define HDR_BugsnagKSArchSpecific_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#include <sys/_structs.h>
+
+#ifdef __LP64__
+    #define STRUCT_NLIST struct nlist_64
+#else
+    #define STRUCT_NLIST struct nlist
+#endif
+
+
+#ifdef __arm64__
+    #define STRUCT_MCONTEXT_L _STRUCT_MCONTEXT64
+#else
+    #define STRUCT_MCONTEXT_L _STRUCT_MCONTEXT
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // HDR_BugsnagKSArchSpecific_h

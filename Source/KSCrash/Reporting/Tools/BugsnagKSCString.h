@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCString.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2013-02-23.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -24,29 +24,34 @@
 // THE SOFTWARE.
 //
 
-
 #import <Foundation/Foundation.h>
 
-
-/** Adds dictionary merging capabilities.
+/**
+ * A string, stored C style with null termination.
  */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagKSCString : NSObject
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+/** Length of the string in bytes (not characters!). Length does not include null terminator. */
+@property(nonatomic,readonly,assign) size_t length;
+
+/** String contents, including null terminator */
+@property(nonatomic,readonly,assign) const char* bytes;
+
+/** Constructor for NSString */
++ (BugsnagKSCString*) stringWithString:(NSString*) string;
+
+/** Constructor for null-terminated C string (assumes UTF-8 encoding). */
++ (BugsnagKSCString*) stringWithCString:(const char*) string;
+
+/** Constructor for string contained in NSData (assumes UTF-8 encoding). */
++ (BugsnagKSCString*) stringWithData:(NSData*) data;
+
+/** Constructor for non-terminated string (assumes UTF-8 encoding). */
++ (BugsnagKSCString*) stringWithData:(const char*) data length:(size_t) length;
+
+- (id) initWithString:(NSString*) string;
+- (id) initWithCString:(const char*) string;
+- (id) initWithData:(NSData*) data;
+- (id) initWithData:(const char*) data length:(size_t) length;
 
 @end

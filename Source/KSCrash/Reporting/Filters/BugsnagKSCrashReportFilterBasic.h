@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashReportFilterBasic.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-05-11.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,30 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKSCrashReportFilter.h"
 
 
-/** Adds dictionary merging capabilities.
+/**
+ * Convert UTF-8 data to an NSString.
+ *
+ * Input: NSData
+ * Output: NSString
  */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagKSCrashReportFilterDataToString : NSObject <BugsnagKSCrashReportFilter>
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
++ (BugsnagKSCrashReportFilterDataToString*) filter;
+
+@end
+
+
+/**
+ * Convert NSString to UTF-8 encoded NSData.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * Input: NSString
+ * Output: NSData
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+@interface BugsnagKSCrashReportFilterStringToData : NSObject <BugsnagKSCrashReportFilter>
+
++ (BugsnagKSCrashReportFilterStringToData*) filter;
 
 @end

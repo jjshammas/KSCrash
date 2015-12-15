@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashSentry_Deadlock.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-12-09.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -24,29 +24,43 @@
 // THE SOFTWARE.
 //
 
-
-#import <Foundation/Foundation.h>
-
-
-/** Adds dictionary merging capabilities.
+/* Catches deadlocks in threads and queues.
  */
-@interface NSDictionary (BugsnagKSMerge)
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+
+#ifndef HDR_BugsnagKSCrashSentry_Deadlock_h
+#define HDR_BugsnagKSCrashSentry_Deadlock_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#include "BugsnagKSCrashSentry.h"
+
+
+/** Install the deadlock handler.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
+ * @param context The crash context to fill out when a crash occurs.
  *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * @return true if installation was succesful.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+bool kscrashsentry_installDeadlockHandler(BugsnagKSCrash_SentryContext* context);
 
-@end
+/** Uninstall our custome NSException handler.
+ */
+void kscrashsentry_uninstallDeadlockHandler(void);
+
+/** Set the interval between watchdog checks on the main thread.
+ * Default is 5 seconds.
+ *
+ * @param value The number of seconds between checks (0 = disabled).
+ */
+void kscrashsentry_setDeadlockHandlerWatchdogInterval(double value);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // HDR_BugsnagKSCrashSentry_Deadlock_h

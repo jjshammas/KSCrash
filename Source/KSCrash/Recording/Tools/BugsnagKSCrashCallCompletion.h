@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashCallCompletion.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2013-02-10.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -24,29 +24,16 @@
 // THE SOFTWARE.
 //
 
+#import "BugsnagKSCrashReportFilter.h"
 
-#import <Foundation/Foundation.h>
-
-
-/** Adds dictionary merging capabilities.
+/** Conditionally call a completion method if it's not nil.
+ *
+ * @param onCompletion The completion block. If nil, this function does nothing.
+ * @param filteredReports The parameter to send as "filteredReports".
+ * @param completed The parameter to send as "completed".
+ * @param error The parameter to send as "error".
  */
-@interface NSDictionary (BugsnagKSMerge)
-
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
-
-@end
+void kscrash_i_callCompletion(BugsnagKSCrashReportFilterCompletion onCompletion,
+                              NSArray* filteredReports,
+                              BOOL completed,
+                              NSError* error);

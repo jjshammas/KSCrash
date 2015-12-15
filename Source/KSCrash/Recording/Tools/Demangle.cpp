@@ -27,7 +27,7 @@
 #include "Demangle.h"
 #include <cxxabi.h>
 #include <string.h>
-#include "KSLogger.h"
+#include "BugsnagKSLogger.h"
 
 char* cpp_demangle(const char* mangled_name, char* output_buffer, size_t* length, int* status)
 {
