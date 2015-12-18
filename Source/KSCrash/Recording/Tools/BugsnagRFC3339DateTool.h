@@ -1,9 +1,7 @@
 //
-//  NSDictionary+Merge.h
+// BugsnagRFC3339DateTool.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
-//
-//  Copyright (c) 2012 Karl Stenerud. All rights reserved.
+// Copyright 2010 Karl Stenerud
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,25 +26,41 @@
 #import <Foundation/Foundation.h>
 
 
-/** Adds dictionary merging capabilities.
+/**
+ * Tool for converting to/from RFC3339 compliant date strings.
  */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagRFC3339DateTool : NSObject
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+/** Convert a date to an RFC3339 string representation.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
+ * @param date The date to convert.
  *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * @return The RFC3339 date string.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
++ (NSString*) stringFromDate:(NSDate*) date;
+
+/** Convert an RFC3339 string representation to a date.
+ *
+ * @param string The string to convert.
+ *
+ * @return The date.
+ */
++ (NSDate*) dateFromString:(NSString*) string;
+
+/** Convert a UNIX timestamp to an RFC3339 string representation.
+ *
+ * @param date The date to convert.
+ *
+ * @return The RFC3339 date string.
+ */
++ (NSString*) stringFromUNIXTimestamp:(unsigned long long) timestamp;
+
+/** Convert an RFC3339 string representation to a UNIX timestamp.
+ *
+ * @param string The string to convert.
+ *
+ * @return The timestamp.
+ */
++ (unsigned long long) UNIXTimestampFromString:(NSString*) string;
 
 @end

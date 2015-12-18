@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashReportFilterGZip.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-05-10.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,33 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKSCrashReportFilter.h"
 
 
-/** Adds dictionary merging capabilities.
+/** Gzip compresses reports.
+ *
+ * Input: NSData
+ * Output: NSData
  */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagKSCrashReportFilterGZipCompress : NSObject <BugsnagKSCrashReportFilter>
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+/** Constructor.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * @param compressionLevel 0 = none, 9 = best, -1 = default
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
++ (BugsnagKSCrashReportFilterGZipCompress*) filterWithCompressionLevel:(int) compressionLevel;
+
+- (id) initWithCompressionLevel:(int) compressionLevel;
+
+@end
+
+/** Gzip decompresses reports.
+ *
+ * Input: NSData
+ * Output: NSData
+ */
+@interface BugsnagKSCrashReportFilterGZipDecompress : NSObject <BugsnagKSCrashReportFilter>
+
++ (BugsnagKSCrashReportFilterGZipDecompress*) filter;
 
 @end

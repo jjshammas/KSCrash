@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSSystemInfoC.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-05-08.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,32 @@
 //
 
 
-#import <Foundation/Foundation.h>
-
-
-/** Adds dictionary merging capabilities.
+/* C interface to the system information.
  */
-@interface NSDictionary (BugsnagKSMerge)
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+
+#ifndef BugsnagKSCrash_KSSystemInfoC_h
+#define BugsnagKSCrash_KSSystemInfoC_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/** Get the complete system info dictionary encoded to JSON.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * @return System info as JSON. Caller is responsible for calling free().
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+const char* kssysteminfo_toJSON(void);
 
-@end
+/** Create a copy of the current process name.
+ *
+ * @return The process name. Caller is responsible for calling free().
+ */
+char* kssysteminfo_copyProcessName(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

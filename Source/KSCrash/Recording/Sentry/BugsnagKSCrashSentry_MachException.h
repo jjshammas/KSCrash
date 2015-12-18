@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashSentry_MachException.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-02-04.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,36 @@
 //
 
 
-#import <Foundation/Foundation.h>
-
-
-/** Adds dictionary merging capabilities.
+/* Catches mach exceptions.
  */
-@interface NSDictionary (BugsnagKSMerge)
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
+
+#ifndef HDR_KSCrashSentry_MachException_h
+#define HDR_KSCrashSentry_MachException_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#include "BugsnagKSCrashSentry.h"
+
+
+/** Install our custom mach exception handler.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
+ * @param context Contextual information for the crash handler.
  *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * @return true if installation was succesful.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+bool kscrashsentry_installMachHandler(BugsnagKSCrash_SentryContext* context);
 
-@end
+/** Uninstall our custom mach exception handler.
+ */
+void kscrashsentry_uninstallMachHandler(void);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // HDR_KSCrashSentry_MachException_h

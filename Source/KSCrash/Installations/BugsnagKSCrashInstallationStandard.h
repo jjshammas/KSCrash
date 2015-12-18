@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashInstallationStandard.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2013-03-02.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,14 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKSCrashInstallation.h"
 
 
-/** Adds dictionary merging capabilities.
- */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagKSCrashInstallationStandard : BugsnagKSCrashInstallation
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+/** The URL to connect to. */
+@property(nonatomic,readwrite,retain) NSURL* url;
+
++ (BugsnagKSCrashInstallationStandard*) sharedInstance;
 
 @end

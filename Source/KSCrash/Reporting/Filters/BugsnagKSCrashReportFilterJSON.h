@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSCrashReportFilterJSON.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-05-09.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -25,28 +25,33 @@
 //
 
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKSCrashReportFilter.h"
+#import "BugsnagKSJSONCodecObjC.h"
 
 
-/** Adds dictionary merging capabilities.
+/** Converts reports from dict to JSON.
+ *
+ * Input: NSDictionary
+ * Output: NSData
  */
-@interface NSDictionary (BugsnagKSMerge)
+@interface BugsnagKSCrashReportFilterJSONEncode : NSObject <BugsnagKSCrashReportFilter>
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
++ (BugsnagKSCrashReportFilterJSONEncode*) filterWithOptions:(BugsnagKSJSONEncodeOption) options;
+
+- (id) initWithOptions:(BugsnagKSJSONEncodeOption) options;
+
+@end
+
+
+/** Converts reports from JSON to dict.
  *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
+ * Input: NSData
+ * Output: NSDictionary
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+@interface BugsnagKSCrashReportFilterJSONDecode : NSObject <BugsnagKSCrashReportFilter>
+
++ (BugsnagKSCrashReportFilterJSONDecode*) filterWithOptions:(BugsnagKSJSONDecodeOption) options;
+
+- (id) initWithOptions:(BugsnagKSJSONDecodeOption) options;
 
 @end

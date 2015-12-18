@@ -1,7 +1,7 @@
 //
-//  NSDictionary+Merge.h
+//  BugsnagKSSafeCollections.h
 //
-//  Created by Karl Stenerud on 2012-10-01.
+//  Created by Karl Stenerud on 2012-08-21.
 //
 //  Copyright (c) 2012 Karl Stenerud. All rights reserved.
 //
@@ -28,25 +28,27 @@
 #import <Foundation/Foundation.h>
 
 
-/** Adds dictionary merging capabilities.
- */
-@interface NSDictionary (BugsnagKSMerge)
+@interface NSMutableArray (BugsnagKSSafeCollections)
 
-/** Recursively merge this dictionary into the destination dictionary.
- * If the same key exists in both dictionaries, the following occurs:
- * - If both entries are dictionaries, the sub-dictionaries are merged and
- *   placed into the merged dictionary.
- * - Otherwise the entry from this dictionary overrides the entry from the
- *   destination in the merged dictionary.
- *
- * Note: Neither this dictionary nor the destination will be modified by this
- *       operation.
- *
- * @param dest The dictionary to merge into. Can be nil or empty, in which case
- *             this dictionary is returned.
- *
- * @return The merged dictionary.
- */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+- (void) addObjectIfNotNil:(id) object;
+
+- (void) safeAddObject:(id) object;
+
+- (void) insertObjectIfNotNil:(id) object atIndex:(NSUInteger) index;
+
+- (void) safeInsertObject:(id) object atIndex:(NSUInteger) index;
+
+@end
+
+
+@interface NSMutableDictionary (BugsnagKSSafeCollections)
+
+- (void) setObjectIfNotNil:(id) object forKey:(id) key;
+
+- (void) safeSetObject:(id) object forKey:(id) key;
+
+- (void) setValueIfNotNil:(id) value forKey:(NSString*) key;
+
+- (void) safeSetValue:(id) value forKey:(NSString*) key;
 
 @end
