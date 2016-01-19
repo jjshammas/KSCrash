@@ -30,6 +30,7 @@
 #include "KSBacktrace_Private.h"
 #include "KSCrashReportFields.h"
 #include "KSCrashReportWriter.h"
+#include "KSCrashSentry_Private.h"
 #include "KSDynamicLinker.h"
 #include "KSFileUtils.h"
 #include "KSJSONCodec.h"
@@ -2154,28 +2155,6 @@ void kscrashreport_writeStandardReport(KSCrash_Context* const crashContext,
                                 KSCrashReportType_Standard,
                                 crashContext->config.crashID,
                                 crashContext->config.processName);
-
-        kscrw_i_writeBinaryImages(writer, KSCrashField_BinaryImages);
-
-        kscrw_i_writeProcessState(writer, KSCrashField_ProcessState);
-
-        if(crashContext->config.systemInfoJSON != NULL)
-        {
-            kscrw_i_addJSONElement(writer, KSCrashField_System, crashContext->config.systemInfoJSON);
-        }
-
-        writer->beginObject(writer, KSCrashField_SystemAtCrash);
-        {
-            kscrw_i_writeMemoryInfo(writer, KSCrashField_Memory);
-            kscrw_i_writeAppStats(writer, KSCrashField_AppStats, &crashContext->state);
-        }
-        writer->endContainer(writer);
-
-        if(crashContext->config.userInfoJSON != NULL)
-        {
-            kscrw_i_addJSONElement(writer, KSCrashField_User, crashContext->config.userInfoJSON);
-        }
-
         writer->beginObject(writer, KSCrashField_Crash);
         {
             kscrw_i_writeAllThreads(writer,
@@ -2187,6 +2166,29 @@ void kscrashreport_writeStandardReport(KSCrash_Context* const crashContext,
             kscrw_i_writeError(writer, KSCrashField_Error, &crashContext->crash);
         }
         writer->endContainer(writer);
+
+        writer->beginObject(writer, KSCrashField_SystemAtCrash);
+        {
+            kscrw_i_writeMemoryInfo(writer, KSCrashField_Memory);
+            kscrw_i_writeAppStats(writer, KSCrashField_AppStats, &crashContext->state);
+        }
+        writer->endContainer(writer);
+
+        kscrashsentry_resumeThreads();
+
+        kscrw_i_writeBinaryImages(writer, KSCrashField_BinaryImages);
+
+        kscrw_i_writeProcessState(writer, KSCrashField_ProcessState);
+
+        if(crashContext->config.systemInfoJSON != NULL)
+        {
+            kscrw_i_addJSONElement(writer, KSCrashField_System, crashContext->config.systemInfoJSON);
+        }
+
+        if(crashContext->config.userInfoJSON != NULL)
+        {
+            kscrw_i_addJSONElement(writer, KSCrashField_User, crashContext->config.userInfoJSON);
+        }
 
         if(crashContext->config.onCrashNotify != NULL)
         {
